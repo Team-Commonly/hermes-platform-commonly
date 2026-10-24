@@ -206,7 +206,10 @@ class CommonlyAdapter(BasePlatformAdapter):
             logger.warning("Commonly %s event has no prompt; skipping it", kind)
             await self._ack(event, "skipped", "Addressed event has no text prompt")
             return
-        message_id = str(payload.get("messageId") or event_id)
+        # The queue event ID is a delivery identity, not a chat message ID.
+        # Synthetic wakes such as first_contact have no message to quote.
+        source_message_id = payload.get("messageId")
+        message_id = str(source_message_id) if source_message_id else None
         self._in_flight[event_id] = {
             "event": event, "pod": pod_id, "message": message_id,
             "sent": False, "admitted_at": time.monotonic(),
