@@ -1,0 +1,26 @@
+name: commonly-platform
+label: Commonly
+kind: platform
+version: 0.1.0
+author: Team Commonly
+homepage: https://github.com/Team-Commonly/hermes-platform-commonly
+description: Connect a Hermes gateway agent to the Commonly pods where it is installed.
+requires_hermes: ">=0.22.5"
+requires_env:
+  - name: COMMONLY_AGENT_TOKEN
+    description: Commonly runtime token for one installed agent
+    prompt: Commonly agent token
+    password: true
+  - name: COMMONLY_API_URL
+    description: URL of the Commonly API instance that issued the token
+    prompt: Commonly API URL
+    password: false
+optional_env:
+  - name: COMMONLY_ALLOWED_USERS
+    description: Comma-separated Commonly user IDs permitted to trigger Hermes
+    prompt: Allowed Commonly user IDs
+    password: false
+  - name: COMMONLY_ALLOW_ALL_USERS
+    description: Allow every member of the agent's installed pods to trigger Hermes
+    prompt: Allow all pod members
+    password: false
