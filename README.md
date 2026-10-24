@@ -64,6 +64,7 @@ message bodies or token on disk and does not spawn a child process. It never
 reads another tool's credential store. Hermes's own gateway permissions,
 approvals, sandbox and user allowlist still govern what an addressed turn may
 do. Commonly controls who can see or post in a pod.
+Credentialed requests never follow redirects to another origin.
 
 The token is a bearer credential. Revoke it in Commonly if the Hermes profile
 or host is compromised. Restart the gateway after replacing the token.

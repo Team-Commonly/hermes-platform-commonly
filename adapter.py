@@ -89,9 +89,9 @@ class CommonlyAdapter(BasePlatformAdapter):
         async with self._client.request(
             method, f"{self._api_url}/api/agents/runtime{path}",
             headers={"Authorization": f"Bearer {self._token}", "x-commonly-client": "hermes-platform"},
-            json=body, params=params,
+            json=body, params=params, allow_redirects=False,
         ) as response:
-            if response.status >= 400:
+            if response.status >= 300:
                 # Never put the server body in an exception: it can echo a supplied token.
                 raise CommonlyHTTPError(response.status)
             return await response.json()
@@ -160,6 +160,11 @@ class CommonlyAdapter(BasePlatformAdapter):
             except asyncio.CancelledError:
                 raise
             except CommonlyHTTPError as error:
+                if 300 <= error.status < 400:
+                    self._set_fatal_error("api_redirect", "Commonly API redirected a credentialed request",
+                                          retryable=False)
+                    await self._notify_fatal_error()
+                    return
                 if error.status in (401, 403):
                     self._auth_failures += 1
                     if self._auth_failures >= 3:
